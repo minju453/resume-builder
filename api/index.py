@@ -62,14 +62,43 @@ def manifest():
 def service_worker():
     return send_from_directory(static_dir, "sw.js", mimetype="application/javascript")
 
-# 7. 메인 홈 화면 라우트
-@app.route("/")
-def index():
-    logger.info("메인 페이지 요청 수신 (GET /)")
-    return render_template("index.html")
+# 7. 메인 홈 화면 라우트 (Vercel rewrite 다중 경로 완벽 지원)
+def safe_render_index():
+    try:
+        return render_template("index.html")
+    except Exception as err:
+        logger.error(f"render_template 실패, 직접 파일 읽기 시도: {err}")
+        search_paths = [
+            os.path.join(template_dir, "index.html"),
+            os.path.join(ROOT_DIR, "templates", "index.html"),
+            os.path.join(CURRENT_DIR, "templates", "index.html"),
+            "templates/index.html"
+        ]
+        for path in search_paths:
+            if os.path.exists(path):
+                with open(path, "r", encoding="utf-8") as f:
+                    return f.read(), 200, {"Content-Type": "text/html; charset=utf-8"}
+        return f"<h1>Template error: {err}</h1>", 500
 
-# 8. 이력서 및 포트폴리오 생성 API 라우트
+@app.route("/")
+@app.route("/api")
+@app.route("/api/index")
+@app.route("/api/index.py")
+def index():
+    logger.info(f"메인 페이지 요청 수신 (경로: {request.path})")
+    return safe_render_index()
+
+# 8. 404 폴백 핸들러 (어떤 비정상 경로로 전달되어도 404 에러화면 차단)
+@app.errorhandler(404)
+def handle_404(e):
+    logger.info(f"404 폴백 처리 (요청 URL: {request.path})")
+    if request.path.startswith("/generate"):
+        return jsonify({"error": "Not Found"}), 404
+    return safe_render_index()
+
+# 9. 이력서 및 포트폴리오 생성 API 라우트
 @app.route("/generate", methods=["POST"])
+@app.route("/api/generate", methods=["POST"])
 def generate():
     logger.info("이력서 및 포트폴리오 생성 요청 수신 (POST /generate)")
 
