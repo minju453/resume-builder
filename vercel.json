@@ -2,13 +2,13 @@
   "version": 2,
   "functions": {
     "api/index.py": {
-      "includeFiles": "templates/**,static/**"
+      "includeFiles": ["templates/**", "static/**"]
     }
   },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api/index.py"
+      "destination": "/api/index"
     }
   ]
 }
