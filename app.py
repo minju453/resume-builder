@@ -1,6 +1,6 @@
 import os
 import logging
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from dotenv import load_dotenv
 import google.generativeai as genai
 
@@ -14,8 +14,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# 3. Flask 웹 애플리케이션 생성
-app = Flask(__name__)
+# 3. Flask 웹 애플리케이션 생성 (Vercel Serverless 절대경로 호환)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static")
+)
 
 # 4. Gemini API Key 확인 및 설정
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
@@ -24,7 +29,16 @@ if not GEMINI_API_KEY or GEMINI_API_KEY == "your_gemini_api_key_here":
 else:
     genai.configure(api_key=GEMINI_API_KEY)
 
-# 5. 메인 홈 화면 라우트 (GET /)
+# 5. PWA 관련 라우트 (루트 스코프 제공)
+@app.route("/manifest.json")
+def manifest():
+    return send_from_directory(os.path.join(BASE_DIR, "static"), "manifest.json", mimetype="application/manifest+json")
+
+@app.route("/sw.js")
+def service_worker():
+    return send_from_directory(os.path.join(BASE_DIR, "static"), "sw.js", mimetype="application/javascript")
+
+# 6. 메인 홈 화면 라우트 (GET /)
 @app.route("/")
 def index():
     logger.info("메인 페이지 요청 수신 (GET /)")
