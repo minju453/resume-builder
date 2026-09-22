@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume & Portfolio Builder</title>
+    <!-- 외부 스타일시트 연결 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- 상단 헤더 -->
+        <header class="header">
+            <h1>🚀 AI Resume & Portfolio Builder</h1>
+            <p class="subtitle">간단한 정보만 입력하면 Google Gemini AI가 서류 합격률을 높여주는 맞춤형 이력서와 포트폴리오를 완성해 드립니다.</p>
+        </header>
+
+        <!-- 메인 컨텐츠 영역 (좌측 폼, 우측 결과) -->
+        <main class="main-content">
+            <!-- 1. 정보 입력 폼 섹션 -->
+            <section class="form-section">
+                <div class="card window-card">
+                    <div class="window-titlebar">
+                        <div class="window-controls">
+                            <span class="dot dot-pink"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <span class="window-title">🎀 PROFILE_INPUT.EXE</span>
+                        <div class="window-actions">
+                            <span class="action-btn">_</span>
+                            <span class="action-btn">□</span>
+                            <span class="action-btn">✕</span>
+                        </div>
+                    </div>
+                    
+                    <div class="window-content">
+                        <!-- 오류 메시지 표시 박스 -->
+                        <div id="error-box" class="alert alert-error" style="display: none;"></div>
+
+                        <form id="resume-form">
+                            <!-- 이름 -->
+                            <div class="form-group">
+                                <label for="name">이름 <span class="required">*</span></label>
+                                <input type="text" id="name" name="name" placeholder="예: 홍길동" required>
+                            </div>
+
+                            <!-- 지원 직무 -->
+                            <div class="form-group">
+                                <label for="job-title">지원 직무 <span class="required">*</span></label>
+                                <input type="text" id="job-title" name="job_title" placeholder="예: 백엔드 파이썬 개발자" required>
+                            </div>
+
+                            <!-- 톤앤매너 (Tone) -->
+                            <div class="form-group">
+                                <label for="tone">문체 및 어조 (Tone)</label>
+                                <select id="tone" name="tone">
+                                    <option value="신뢰감 있고 전문적인 톤 (Professional)">신뢰감 있고 전문적인 톤 (Professional)</option>
+                                    <option value="자신감 넘치고 도전적인 톤 (Confident)">자신감 넘치고 도전적인 톤 (Confident)</option>
+                                    <option value="창의적이고 열정적인 톤 (Creative)">창의적이고 열정적인 톤 (Creative)</option>
+                                    <option value="친근하고 협업을 강조하는 톤 (Friendly)">친근하고 협업을 강조하는 톤 (Friendly)</option>
+                                </select>
+                            </div>
+
+                            <!-- 프롬프트 엔진 선택 (Prompt A vs Prompt B) -->
+                            <div class="form-group">
+                                <label>AI 작성 모드 선택</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="prompt_type" value="general" checked>
+                                        <span class="radio-text">
+                                            <strong>Prompt A (일반 모드)</strong>
+                                            <small>균형 잡히고 깔끔하며 자연스러운 표준 서술형</small>
+                                        </span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="prompt_type" value="expert">
+                                        <span class="radio-text">
+                                            <strong>Prompt B (전문가 모드)</strong>
+                                            <small>수치 및 성과 중심, 글로벌 IT 기업 STAR 기법 적용</small>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- 경력 사항 -->
+                            <div class="form-group">
+                                <label for="experience">경력 사항 <span class="required">*</span></label>
+                                <textarea id="experience" name="experience" rows="4" placeholder="회사명, 근무 기간, 주요 담당 업무 등을 자유롭게 적어주세요.&#10;예: (주)테크기업 백엔드 인턴 (2024.01 ~ 2024.06) - 회원가입 및 결제 API 개발" required></textarea>
+                            </div>
+
+                            <!-- 주요 프로젝트 경험 -->
+                            <div class="form-group">
+                                <label for="projects">주요 프로젝트 경험 <span class="required">*</span></label>
+                                <textarea id="projects" name="projects" rows="4" placeholder="프로젝트 이름, 사용 기술, 내가 기여한 내용과 성과를 적어주세요.&#10;예: AI 이력서 생성 서비스 - Flask와 Gemini API를 연동하여 생성 속도 30% 개선" required></textarea>
+                            </div>
+
+                            <!-- 생성 버튼 -->
+                            <button type="submit" id="submit-btn" class="btn btn-primary">
+                                <span id="btn-text">✨ AI로 이력서 & 포트폴리오 생성하기</span>
+                                <span id="btn-spinner" class="spinner" style="display: none;"></span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. AI 생성 결과 확인 섹션 -->
+            <section class="result-section">
+                <!-- 초기 안내 화면 -->
+                <div id="empty-state" class="card window-card empty-card">
+                    <div class="window-titlebar">
+                        <div class="window-controls">
+                            <span class="dot dot-pink"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <span class="window-title">💭 STANDBY_VIEW.EXE</span>
+                        <div class="window-actions"><span class="action-btn">□</span></div>
+                    </div>
+                    <div class="window-content empty-body">
+                        <div class="empty-icon">📄</div>
+                        <h3>아직 생성된 결과물이 없습니다</h3>
+                        <p>왼쪽 창에서 정보를 입력하고 [생성하기] 버튼을 누르면 AI가 맞춤형 이력서와 포트폴리오를 만들어 드립니다.</p>
+                    </div>
+                </div>
+
+                <!-- 로딩 중 화면 -->
+                <div id="loading-state" class="card window-card loading-card" style="display: none;">
+                    <div class="window-titlebar">
+                        <div class="window-controls">
+                            <span class="dot dot-pink"></span>
+                            <span class="dot dot-yellow"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <span class="window-title">⏳ GENERATING_DOCUMENT...</span>
+                        <div class="window-actions"><span class="action-btn">□</span></div>
+                    </div>
+                    <div class="window-content loading-body">
+                        <div class="big-spinner"></div>
+                        <h3>Gemini AI가 문서를 작성하고 있습니다...</h3>
+                        <p>입력하신 내용을 바탕으로 합격률 높은 문서를 구성 중입니다. (약 3~5초 소요)</p>
+                    </div>
+                </div>
+
+                <!-- 결과 표시 영역 (생성 완료 후 노출) -->
+                <div id="result-box" class="results-wrapper" style="display: none;">
+                    <!-- 이력서 카드 -->
+                    <div class="card window-card result-card">
+                        <div class="window-titlebar">
+                            <div class="window-controls">
+                                <span class="dot dot-pink"></span>
+                                <span class="dot dot-yellow"></span>
+                                <span class="dot dot-green"></span>
+                            </div>
+                            <span class="window-title">📄 RESUME_OUTPUT.DOC</span>
+                            <div class="button-group">
+                                <button type="button" id="copy-resume-btn" class="btn btn-secondary btn-sm">📋 복사</button>
+                                <button type="button" id="download-resume-btn" class="btn btn-secondary btn-sm">💾 .md 다운로드</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="resume-content" class="markdown-body"></div>
+                        </div>
+                    </div>
+
+                    <!-- 포트폴리오 카드 -->
+                    <div class="card window-card result-card">
+                        <div class="window-titlebar">
+                            <div class="window-controls">
+                                <span class="dot dot-pink"></span>
+                                <span class="dot dot-yellow"></span>
+                                <span class="dot dot-green"></span>
+                            </div>
+                            <span class="window-title">💼 PORTFOLIO_SUMMARY.DOC</span>
+                            <div class="button-group">
+                                <button type="button" id="copy-portfolio-btn" class="btn btn-secondary btn-sm">📋 복사</button>
+                                <button type="button" id="download-portfolio-btn" class="btn btn-secondary btn-sm">💾 .md 다운로드</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="portfolio-content" class="markdown-body"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 마크다운 파서 및 외부 자바스크립트 연결 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

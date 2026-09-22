@@ -1,0 +1,482 @@
+/* ==========================================================================
+   AI Resume & Portfolio Builder - Retro Y2K Pastel Pink OS Window Theme
+   ========================================================================== */
+
+/* 1. 기본 리셋 및 폰트 설정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Segoe UI", Roboto, "Malgun Gothic", sans-serif;
+    /* 레트로 핑크 모눈종이(Grid paper) 배경 */
+    background-color: #fff0f5;
+    background-image:
+        linear-gradient(to right, #fed8e3 1.5px, transparent 1.5px),
+        linear-gradient(to bottom, #fed8e3 1.5px, transparent 1.5px);
+    background-size: 22px 22px;
+    color: #4a3341;
+    line-height: 1.6;
+    padding: 36px 16px;
+    min-height: 100vh;
+}
+
+/* 2. 전체 레이아웃 컨테이너 */
+.container {
+    max-width: 1240px;
+    margin: 0 auto;
+}
+
+/* 3. 상단 헤더 영역 */
+.header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.header h1 {
+    display: inline-block;
+    font-size: 2.1rem;
+    font-weight: 900;
+    color: #6b3a53;
+    background-color: #ffffff;
+    border: 2.5px solid #7c5268;
+    border-radius: 14px;
+    padding: 10px 24px;
+    box-shadow: 4px 4px 0px #7c5268;
+    margin-bottom: 12px;
+    letter-spacing: -0.5px;
+}
+
+.header .subtitle {
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: #8b5b73;
+    max-width: 680px;
+    margin: 0 auto;
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 6px 16px;
+    border-radius: 20px;
+    display: inline-block;
+}
+
+/* 4. 메인 2열 그리드 레이아웃 (좌: 입력창, 우: 결과창) */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: 28px;
+    align-items: start;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 5. 레트로 윈도우 카드 (OS Window Frame) */
+.window-card {
+    background-color: #ffffff;
+    border: 2.5px solid #7c5268;
+    border-radius: 18px;
+    overflow: hidden;
+    /* 스크린샷 특유의 3D 입체 테두리 그림자 */
+    box-shadow: 5px 5px 0px #7c5268;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 왼쪽 프로필 폼 창: 스크린샷과 동일한 이중 레이어 윈도우 효과 */
+.form-section .window-card {
+    box-shadow: 4px 4px 0px #f8b4c4, 8px 8px 0px #7c5268;
+}
+
+/* 6. 윈도우 상단 타이틀바 */
+.window-titlebar {
+    background: linear-gradient(to right, #f49fb6, #eea2b6);
+    border-bottom: 2.5px solid #7c5268;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 상단 3색 동그라미 컨트롤 */
+.window-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid #7c5268;
+    display: inline-block;
+}
+
+.dot-pink   { background-color: #ff85a2; }
+.dot-yellow { background-color: #ffd166; }
+.dot-green  { background-color: #06d6a0; }
+
+.window-title {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #4a2839;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* 윈도우 우측 창 버튼 (_, □, ✕) */
+.window-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.action-btn {
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+    border: 1.5px solid #7c5268;
+    border-radius: 4px;
+    color: #7c5268;
+    font-size: 10px;
+    font-weight: 900;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    user-select: none;
+}
+
+/* 윈도우 본문 컨텐츠 영역 */
+.window-content {
+    padding: 24px;
+    background-color: #ffffff;
+}
+
+/* 7. 폼 요소 스타일 */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #5c3b4e;
+    margin-bottom: 6px;
+}
+
+.required {
+    color: #e63946;
+}
+
+input[type="text"],
+select,
+textarea {
+    width: 100%;
+    padding: 11px 13px;
+    font-size: 0.95rem;
+    color: #4a3341;
+    background-color: #fff9fb;
+    border: 2px solid #a87994;
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+input[type="text"]:focus,
+select:focus,
+textarea:focus {
+    background-color: #ffffff;
+    border-color: #e85d88;
+    box-shadow: 0 0 0 3.5px rgba(232, 93, 136, 0.22);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 95px;
+}
+
+/* 8. 라디오 선택 버튼 (프롬프트 선택) */
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.radio-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 14px;
+    background-color: #fff5f8;
+    border: 2px solid #dca7be;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.radio-label:hover {
+    background-color: #ffedf3;
+    border-color: #c988a5;
+}
+
+.radio-label input[type="radio"] {
+    margin-top: 3px;
+    accent-color: #e85d88;
+    transform: scale(1.15);
+}
+
+.radio-text strong {
+    font-size: 0.92rem;
+    color: #5c3b4e;
+}
+
+.radio-text small {
+    font-size: 0.8rem;
+    color: #8f657c;
+    margin-top: 2px;
+}
+
+/* 9. 버튼 스타일 (레트로 3D 클릭 효과) */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 0.92rem;
+    font-weight: 800;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 2px solid #7c5268;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    font-family: inherit;
+}
+
+/* 메인 핑크색 생성 버튼 */
+.btn-primary {
+    width: 100%;
+    background-color: #f28fa8;
+    color: #ffffff;
+    font-size: 1.05rem;
+    padding: 13px 20px;
+    margin-top: 8px;
+    border: 2.5px solid #7c5268;
+    border-radius: 12px;
+    box-shadow: 4px 4px 0px #7c5268;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:hover {
+    background-color: #ec7c99;
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px #7c5268;
+}
+
+.btn-primary:active {
+    transform: translate(4px, 4px);
+    box-shadow: 0px 0px 0px #7c5268;
+}
+
+.btn-primary:disabled {
+    background-color: #d1b5c4;
+    border-color: #9e8494;
+    box-shadow: none;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* 윈도우 타이틀바 내 보조 버튼 (복사, 다운로드) */
+.button-group {
+    display: flex;
+    gap: 6px;
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    color: #5c3b4e;
+    box-shadow: 2px 2px 0px #7c5268;
+}
+
+.btn-secondary:hover {
+    background-color: #fff0f5;
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px #7c5268;
+}
+
+.btn-sm {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    border-radius: 6px;
+}
+
+.btn-success {
+    background-color: #a7f3d0 !important;
+    color: #065f46 !important;
+}
+
+/* 10. 알림창 스타일 (에러 메시지) */
+.alert {
+    padding: 10px 14px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.alert-error {
+    background-color: #ffe5e8;
+    border: 2px solid #e63946;
+    color: #9e1c2b;
+}
+
+/* 11. 결과창 및 상태별 화면 */
+.empty-body,
+.loading-body {
+    text-align: center;
+    padding: 50px 24px;
+}
+
+.empty-icon {
+    font-size: 3.2rem;
+    margin-bottom: 14px;
+}
+
+.empty-body h3,
+.loading-body h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #5c3b4e;
+    margin-bottom: 6px;
+}
+
+.empty-body p,
+.loading-body p {
+    font-size: 0.9rem;
+    color: #8f657c;
+}
+
+/* 12. 스피너 애니메이션 */
+.big-spinner {
+    width: 44px;
+    height: 44px;
+    border: 4.5px solid #fed8e3;
+    border-top: 4.5px solid #e85d88;
+    border-radius: 50%;
+    margin: 0 auto 16px auto;
+    animation: spin 1s linear infinite;
+}
+
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top: 2px solid #ffffff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 13. 결과 출력 카드 (이력서 & 포트폴리오) */
+.results-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.result-card .card-body {
+    padding: 22px;
+    background-color: #ffffff;
+}
+
+/* 14. 마크다운 본문 렌더링 스타일 (스크린샷 감성) */
+.markdown-preview,
+.markdown-body {
+    word-break: break-word;
+    font-family: inherit;
+    font-size: 0.94rem;
+    line-height: 1.75;
+    color: #4a3341;
+}
+
+.markdown-body h1 {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #6b3a53;
+    margin-top: 18px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2.5px dashed #f49fb6;
+}
+
+.markdown-body h1:first-child {
+    margin-top: 0;
+}
+
+.markdown-body h2 {
+    font-size: 1.18rem;
+    font-weight: 800;
+    color: #7c4461;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1.5px solid #fed8e3;
+}
+
+.markdown-body h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #8c5270;
+    margin-top: 14px;
+    margin-bottom: 6px;
+}
+
+.markdown-body p {
+    margin-bottom: 10px;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+    margin-bottom: 12px;
+    padding-left: 20px;
+}
+
+.markdown-body li {
+    margin-bottom: 5px;
+}
+
+/* 굵은 글씨 핑크색 하이라이트 (스크린샷 포인트) */
+.markdown-body strong,
+.markdown-body b {
+    color: #d81b60;
+    background-color: #ffe5ec;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 800;
+}
+
+.markdown-body hr {
+    border: 0;
+    height: 2px;
+    background-color: #fed8e3;
+    margin: 18px 0;
+}
+
+.markdown-body blockquote {
+    border-left: 4px solid #e85d88;
+    padding: 8px 14px;
+    color: #73455b;
+    background-color: #fff5f8;
+    border-radius: 0 8px 8px 0;
+    margin: 12px 0;
+}
