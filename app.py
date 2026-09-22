@@ -22,6 +22,21 @@ app = Flask(
     static_folder=os.path.join(BASE_DIR, "static")
 )
 
+# Vercel Serverless rewrite 경로 정규화 미들웨어
+class VercelPathMiddleware:
+    def __init__(self, wsgi_app):
+        self.wsgi_app = wsgi_app
+
+    def __call__(self, environ, start_response):
+        path = environ.get("PATH_INFO", "")
+        for prefix in ["/api/index.py", "/api/index"]:
+            if path.startswith(prefix):
+                environ["PATH_INFO"] = path[len(prefix):] or "/"
+                break
+        return self.wsgi_app(environ, start_response)
+
+app.wsgi_app = VercelPathMiddleware(app.wsgi_app)
+
 # 4. Gemini API Key 확인 및 설정
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 if not GEMINI_API_KEY or GEMINI_API_KEY == "your_gemini_api_key_here":
