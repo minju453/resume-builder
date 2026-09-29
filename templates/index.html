@@ -213,13 +213,39 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
 
-    <!-- PWA 서비스 워커 등록 -->
+    <!-- PWA 서비스 워커 등록 및 자동 갱신 리스너 -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
-                    .then(reg => console.log('PWA Service Worker 등록 완료:', reg.scope))
+                    .then(reg => {
+                        console.log('PWA Service Worker 등록 완료:', reg.scope);
+                        // 페이지 진입 시 서비스 워커 업데이트 강제 검사
+                        reg.update();
+
+                        // 신규 버전 발견 시 업데이트 상태 감지
+                        reg.addEventListener('updatefound', () => {
+                            const installingWorker = reg.installing;
+                            if (installingWorker) {
+                                installingWorker.addEventListener('statechange', () => {
+                                    if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                        console.log('새로운 버전의 앱이 설치되었습니다. 최신 화면으로 갱신합니다.');
+                                        window.location.reload();
+                                    }
+                                });
+                            }
+                        });
+                    })
                     .catch(err => console.log('PWA Service Worker 등록 실패:', err));
+            });
+
+            // 새로운 서비스 워커가 제어권을 획득(activate)했을 때 자동 새로고침
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    window.location.reload();
+                }
             });
         }
     </script>

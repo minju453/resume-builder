@@ -60,7 +60,11 @@ def manifest():
 
 @app.route("/sw.js")
 def service_worker():
-    return send_from_directory(static_dir, "sw.js", mimetype="application/javascript")
+    response = send_from_directory(static_dir, "sw.js", mimetype="application/javascript")
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 # 7. 메인 홈 화면 라우트 (Vercel rewrite 다중 경로 완벽 지원)
 def safe_render_index():
