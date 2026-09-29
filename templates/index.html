@@ -103,6 +103,20 @@
                                 <textarea id="projects" name="projects" rows="4" placeholder="프로젝트 이름, 사용 기술, 내가 기여한 내용과 성과를 적어주세요.&#10;예: AI 이력서 생성 서비스 - Flask와 Gemini API를 연동하여 생성 속도 30% 개선" required></textarea>
                             </div>
 
+                            <!-- 목표 채용 공고(JD) 및 핵심 키워드 매칭 -->
+                            <div class="form-group">
+                                <label for="job-description">🎯 목표 채용 공고(JD) & 핵심 키워드 <span class="optional">(선택 / ATS 매칭)</span></label>
+                                <small class="field-hint">지원하려는 기업의 채용 공고(자격 요건, 우대 사항)나 강조하고 싶은 기술 스택 키워드를 붙여넣어 주세요. AI가 이력서에 자연스럽게 매칭해 드립니다.</small>
+                                <textarea id="job-description" name="job_description" rows="3" placeholder="예: [자격 요건] 백엔드 개발 경력, Python 기반 API 개발 경험&#10;[우대 사항] 대용량 트래픽 처리 경험, AWS 배포 및 Docker 컨테이너 환경 이해 우대"></textarea>
+                            </div>
+
+                            <!-- 문제 해결 및 트러블슈팅 경험 -->
+                            <div class="form-group">
+                                <label for="troubleshooting">💡 문제 해결 및 트러블슈팅(Troubleshooting) 경험 <span class="optional">(선택 / 합격률 UP)</span></label>
+                                <small class="field-hint">개발/업무 중 마주친 기술적 오류나 성능 병목, 그리고 이를 분석하고 해결했던 과정을 적어주세요. 설득력 있는 STAR 기법으로 정제해 드립니다.</small>
+                                <textarea id="troubleshooting" name="troubleshooting" rows="3" placeholder="예: Vercel 배포 시 PWA 서비스 워커와 CSS 간 캐시 오염으로 404 및 스타일 깨짐 발생&#10;-> 정적 라우팅 미들웨어 정규화 및 캐시 버저닝 전략을 적용하여 문제 해결"></textarea>
+                            </div>
+
                             <!-- 생성 버튼 -->
                             <button type="submit" id="submit-btn" class="btn btn-primary">
                                 <span id="btn-text">✨ AI로 이력서 & 포트폴리오 생성하기</span>

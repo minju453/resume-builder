@@ -124,6 +124,8 @@ def generate():
     projects = data.get("projects", "").strip()
     tone = data.get("tone", "professional").strip()
     prompt_type = data.get("prompt_type", "general").strip()
+    job_description = data.get("job_description", "").strip()
+    troubleshooting = data.get("troubleshooting", "").strip()
 
     if not name:
         return jsonify({"success": False, "error": "이름을 입력해 주세요."}), 400
@@ -134,7 +136,7 @@ def generate():
     if not projects:
         return jsonify({"success": False, "error": "주요 프로젝트 경험을 입력해 주세요."}), 400
 
-    logger.info(f"요청자: {name}, 직무: {job_title}, 톤: {tone}, 모드: {prompt_type}")
+    logger.info(f"요청자: {name}, 직무: {job_title}, 톤: {tone}, 모드: {prompt_type}, JD포함: {bool(job_description)}, 트러블슈팅포함: {bool(troubleshooting)}")
 
     if prompt_type == "expert":
         system_instruction = (
@@ -148,6 +150,25 @@ def generate():
             "지원자의 장점과 성실성이 돋보이도록 깔끔하고 가독성이 높은 표준 이력서와 포트폴리오를 작성해 주세요."
         )
 
+    extra_applicant_info = ""
+    extra_guidelines = ""
+
+    if job_description:
+        extra_applicant_info += f"- 목표 채용 공고(JD) 및 핵심 키워드:\n{job_description}\n"
+        extra_guidelines += (
+            "4. [채용 공고 핵심 키워드 매칭] 지원자가 입력한 '목표 채용 공고(JD) 및 핵심 키워드'를 분석하여, "
+            "공고에서 요구하는 주요 역량과 기술 스택 용어가 이력서의 요약(Summary), 보유 기술(Skills), 프로젝트 상세 내용 전반에 "
+            "자연스럽고 설득력 있게 매칭되어 서류 검토 및 ATS 합격률이 극대화되도록 작성해 주세요.\n"
+        )
+
+    if troubleshooting:
+        extra_applicant_info += f"- 문제 해결 및 트러블슈팅 경험:\n{troubleshooting}\n"
+        extra_guidelines += (
+            "5. [트러블슈팅 경험 구체화] 지원자가 입력한 '문제 해결 및 트러블슈팅 경험'을 바탕으로, "
+            "프로젝트 및 경력 세부 항목 내에 '💡 문제 해결 및 트러블슈팅(Troubleshooting)' 섹션을 명확히 구분하여 기술해 주세요. "
+            "[문제 상황 ➔ 원인 분석 ➔ 해결 과정 ➔ 정량적 개선 성과 및 배운 점]의 논리적 흐름으로 기술적 역량이 돋보이게 작성해 주세요.\n"
+        )
+
     prompt = f"""{system_instruction}
 
 [지원자 정보]
@@ -158,12 +179,12 @@ def generate():
 {experience}
 - 주요 프로젝트:
 {projects}
-
+{extra_applicant_info}
 [작성 가이드라인]
 1. 지원자의 정보를 바탕으로 완성도 높은 국문 '이력서(Resume)'와 '포트폴리오 요약본(Portfolio)'을 각각 작성해 주세요.
 2. 결과물은 반드시 아래와 같이 [RESUME]와 [PORTFOLIO] 태그로 명확히 감싸서 출력해야 합니다.
 3. 각 섹션 내부는 깔끔한 Markdown 형식(제목, 글머리 기호, 볼드체 등)으로 구조화해 주세요.
-
+{extra_guidelines}
 [출력 형식]
 [RESUME]
 # {name} - {job_title} 이력서

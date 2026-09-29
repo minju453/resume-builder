@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const toneSelect = document.getElementById("tone");
     const experienceInput = document.getElementById("experience");
     const projectsInput = document.getElementById("projects");
+    const jobDescriptionInput = document.getElementById("job-description");
+    const troubleshootingInput = document.getElementById("troubleshooting");
 
     const submitBtn = document.getElementById("submit-btn");
     const btnText = document.getElementById("btn-text");
@@ -77,6 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const promptType = promptTypeRadio ? promptTypeRadio.value : "general";
         const experience = experienceInput.value.trim();
         const projects = projectsInput.value.trim();
+        const jobDescription = jobDescriptionInput ? jobDescriptionInput.value.trim() : "";
+        const troubleshooting = troubleshootingInput ? troubleshootingInput.value.trim() : "";
 
         // 프론트엔드 입력값 1차 검증
         if (!name) {
@@ -119,7 +123,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     tone: tone,
                     prompt_type: promptType,
                     experience: experience,
-                    projects: projects
+                    projects: projects,
+                    job_description: jobDescription,
+                    troubleshooting: troubleshooting
                 })
             });
 
